@@ -17,6 +17,22 @@ public class MyAppleFilter {
 
         return res;
     }
+
+    public static <T> List<T> filterAnything(List<T> list, MyPredicate<T> predicate) {
+        List<T> res = new ArrayList<>();
+
+        for (T t : list) {
+            if(predicate.test(t)) {
+                res.add(t);
+            }
+        }
+
+        return res;
+    }
+}
+
+interface MyPredicate<T> {
+    Boolean test(T t);
 }
 
 interface MyApplePredicate {

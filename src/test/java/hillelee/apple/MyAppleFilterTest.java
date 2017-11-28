@@ -56,5 +56,13 @@ public class MyAppleFilterTest {
 
     }
 
+    @Test
+    public void filterAnything() throws Exception {
+        List<Apple> filtered = MyAppleFilter.filterAnything(apples, apple -> apple.getColor().equals("GREEN"));
 
+        System.out.println(filtered);
+
+        Assert.assertThat(filtered, Matchers.hasSize(3));
+
+    }
 }
