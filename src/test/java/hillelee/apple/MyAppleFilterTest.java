@@ -36,4 +36,25 @@ public class MyAppleFilterTest {
 
     }
 
+    @Test
+    public void filterByWeightLambda() throws Exception {
+        List<Apple> filtered = MyAppleFilter.filter(apples, apple -> apple.getWeight().equals(120));
+
+        System.out.println(filtered);
+
+        Assert.assertThat(filtered, Matchers.hasSize(2));
+
+    }
+
+    @Test
+    public void filterByColorLambda() throws Exception {
+        List<Apple> filtered = MyAppleFilter.filter(apples, apple -> apple.getColor().equals("GREEN"));
+
+        System.out.println(filtered);
+
+        Assert.assertThat(filtered, Matchers.hasSize(3));
+
+    }
+
+
 }
