@@ -3,6 +3,7 @@ package hillelee.apple;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.function.Predicate;
 
 public class AppleSelector {
     public static Optional<Apple> getHeaviest(List<Apple> apples) {
@@ -41,12 +42,12 @@ public class AppleSelector {
         return res;
     }
 
-    public static List<Apple> filter(List<Apple> apples, ApplePredicate predicate) {
-        List<Apple> res = new ArrayList<>();
+    public static <T> List<T> filter(List<T> items, Predicate<T> predicate) {
+        List<T> res = new ArrayList<>();
 
-        for (Apple apple : apples) {
-            if(predicate.test(apple)) {
-                res.add(apple);
+        for (T item : items) {
+            if(predicate.test(item)) {
+                res.add(item);
             }
         }
 
@@ -55,13 +56,9 @@ public class AppleSelector {
 
 }
 
-interface ApplePredicate {
-    Boolean test(Apple apple);
-}
-
-class ColorPredicate implements ApplePredicate {
+class ColorPredicate implements Predicate<Apple> {
     @Override
-    public Boolean test(Apple apple) {
+    public boolean test(Apple apple) {
         if(apple.getColor().equals("GREEN")) {
             return true;
         }

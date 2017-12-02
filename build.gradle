@@ -23,6 +23,8 @@ dependencies {
     // This dependency is found on compile classpath of this component and consumers.
     compile 'com.google.guava:guava:22.0'
 
+    compile group: 'org.springframework', name: 'spring-context', version: '4.3.12.RELEASE'
+
     compileOnly "org.projectlombok:lombok:1.16.16"
 
     // Use JUnit test framework

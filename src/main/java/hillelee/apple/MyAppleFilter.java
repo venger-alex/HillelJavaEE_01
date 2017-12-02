@@ -31,10 +31,12 @@ public class MyAppleFilter {
     }
 }
 
+@FunctionalInterface
 interface MyPredicate<T> {
     Boolean test(T t);
 }
 
+@FunctionalInterface
 interface MyApplePredicate {
     Boolean test(Apple apple);
 }
