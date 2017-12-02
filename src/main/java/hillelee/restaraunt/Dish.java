@@ -6,9 +6,9 @@ import lombok.Data;
 @Data
 @AllArgsConstructor
 public class Dish {
-    String name;
-    Integer calories;
-    Boolean isBio;
-    DishType type;
+    private String name;
+    private Integer calories;
+    private Boolean isBio;
+    private DishType type;
 
 }

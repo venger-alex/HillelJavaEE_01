@@ -8,6 +8,6 @@ import java.util.List;
 @Data
 @AllArgsConstructor
 public class Restaraunt {
-    List<Dish> menu;
+    private List<Dish> menu;
 
 }
