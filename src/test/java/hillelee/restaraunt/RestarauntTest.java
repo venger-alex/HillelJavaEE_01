@@ -3,7 +3,9 @@ package hillelee.restaraunt;
 import com.google.common.collect.ImmutableList;
 import org.junit.Test;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import static org.junit.Assert.*;
 
@@ -32,6 +34,40 @@ public class RestarauntTest {
                 System.out.println(dish.getName());
             }
         }
+    }
 
+    @Test
+    public void printTop3HighCaloriesDishesOldSchool() {
+        List<Dish> menu = new ArrayList<Dish>(restaraunt.getMenu());
+
+        /*
+         * Заглянул в исходники Comparator'а - функциональный интерфейс,
+         * но помимо метода compare, объявлен еще equals, не как дефолтный,
+         * и не статик, т.е. метода как бы два, а интерфейс все-равно
+         * функциональный. В чем магия?)
+         */
+        menu.sort((o1, o2) -> -1 * o1.getCalories().compareTo(o2.getCalories()));
+
+        menu = new ArrayList<Dish>(menu.subList(0, 3));
+
+        for (Dish dish : menu) {
+            System.out.println(dish.getName());
+        }
+    }
+
+    @Test
+    public void printTop3HighCaloriesDishesStreamAPI() {
+        restaraunt.getMenu().stream()
+                .sorted((o1, o2) -> -1 * o1.getCalories().compareTo(o2.getCalories()))
+                /*
+                 * Вот тут limit судя по всему после сортировки произошел,
+                 * видимо потому, что он после сортировки и указан
+                 * А при фильтрации и вообще limit в каком порядке выполняется,
+                 * элементы то по одному через pipe идут? Почему сортировка тогда целиком
+                 * прошла в данном случае? А при фильтрации (filter)?
+                 */
+                .limit(3)
+                .map(Dish::getName)
+                .forEach(System.out::println);
     }
 }
