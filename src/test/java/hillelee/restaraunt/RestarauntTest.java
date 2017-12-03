@@ -4,6 +4,8 @@ import com.google.common.collect.ImmutableList;
 import org.junit.Test;
 
 import java.util.*;
+import java.util.function.Supplier;
+import java.util.stream.Collector;
 import java.util.stream.Collectors;
 
 import static org.junit.Assert.*;
@@ -11,6 +13,7 @@ import static org.junit.Assert.*;
 public class RestarauntTest {
     Restaraunt restaraunt = new Restaraunt(ImmutableList.of(
             new Dish("Пюре", 25, false, DishType.VEGETABLES),
+            new Dish("Жареная картоха", 30, true, DishType.VEGETABLES),
             new Dish("Отбивная", 470, true, DishType.BEEF),
             new Dish("Пельмени", 570, false, DishType.BEEF),
             new Dish("Салат", 35, true, DishType.VEGETABLES),
@@ -118,5 +121,41 @@ public class RestarauntTest {
                 .collect(Collectors.groupingBy(Dish::getType, Collectors.averagingInt(Dish::getCalories)));
 
         dishesGroupByTypes.forEach((key, value) -> System.out.println(key + " - " + value));
+    }
+
+    @Test
+    public void groupBioDishesNamesByTypeOldSchool() {
+        List<Dish> menu = new ArrayList<Dish>(restaraunt.getMenu());
+        Map<DishType, List<String>> res = new HashMap<>();
+
+        for (Dish dish : menu) {
+            if(!dish.getIsBio()) continue;
+
+            List<String> dishesNames = res.get(dish.getType());
+            if(dishesNames == null) {
+                dishesNames = new ArrayList<String>();
+            }
+
+            dishesNames.add(dish.getName());
+            res.put(dish.getType(), dishesNames);
+        }
+
+        System.out.println(res);
+    }
+
+    @Test
+    public void groupBioDishesNamesByTypeStreamAPI() {
+        Collector<Dish, List<String>, List<String>> collector =
+        Collector.of(
+                () -> new ArrayList<String>(),
+                (list, dish) -> list.add(dish.getName()),
+                (list1, list2) -> {list1.addAll(list2); return list1;}
+        );
+
+        Map<DishType, List<String>> collect = restaraunt.getMenu().stream()
+                .filter(Dish::getIsBio)
+                .collect(Collectors.groupingBy(Dish::getType, collector));
+
+        System.out.println(collect);
     }
 }
