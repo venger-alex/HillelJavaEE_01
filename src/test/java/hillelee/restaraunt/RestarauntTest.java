@@ -4,6 +4,7 @@ import com.google.common.collect.ImmutableList;
 import org.junit.Test;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -11,9 +12,9 @@ import static org.junit.Assert.*;
 
 public class RestarauntTest {
     Restaraunt restaraunt = new Restaraunt(ImmutableList.of(
-            new Dish("Пюре", 25, true, DishType.VEGETABLES),
+            new Dish("Пюре", 25, false, DishType.VEGETABLES),
             new Dish("Отбивная", 470, true, DishType.BEEF),
-            new Dish("Пельмени", 570, true, DishType.BEEF),
+            new Dish("Пельмени", 570, false, DishType.BEEF),
             new Dish("Салат", 35, true, DishType.VEGETABLES),
             new Dish("Окорочек", 370, true, DishType.CHICKEN)));
 
@@ -67,6 +68,31 @@ public class RestarauntTest {
                  * прошла в данном случае? А при фильтрации (filter)?
                  */
                 .limit(3)
+                .map(Dish::getName)
+                .forEach(System.out::println);
+    }
+
+    @Test
+    public void printAllSortByBioThanByAlphabetOldSchool() {
+        List<Dish> menu = new ArrayList<Dish>(restaraunt.getMenu());
+
+        menu.sort(new Comparator<Dish>() {
+            @Override
+            public int compare(Dish o1, Dish o2) {
+                int res = o1.getIsBio().compareTo(o2.getIsBio());
+                return res == 0 ? o1.getName().compareTo(o2.getName()) : res;
+            }
+        });
+
+        for (Dish dish : menu) {
+            System.out.println(dish.getName());
+        }
+    }
+
+    @Test
+    public void printAllSortByBioThanByAlphabetStreamAPI() {
+        restaraunt.getMenu().stream()
+                .sorted(Comparator.comparing(Dish::getIsBio).thenComparing(Dish::getName))
                 .map(Dish::getName)
                 .forEach(System.out::println);
     }
