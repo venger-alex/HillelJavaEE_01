@@ -3,9 +3,7 @@ package hillelee.restaraunt;
 import com.google.common.collect.ImmutableList;
 import org.junit.Test;
 
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
 
 import static org.junit.Assert.*;
@@ -95,5 +93,30 @@ public class RestarauntTest {
                 .sorted(Comparator.comparing(Dish::getIsBio).thenComparing(Dish::getName))
                 .map(Dish::getName)
                 .forEach(System.out::println);
+    }
+
+    @Test
+    public void averageCaloriesByGroupsOldSchool() {
+        List<Dish> menu = new ArrayList<Dish>(restaraunt.getMenu());
+        Map<DishType, Double> res = new HashMap<>();
+
+        for (Dish dish : menu) {
+            Double averageCalories = res.get(dish.getType());
+            if(averageCalories != null) {
+                res.put(dish.getType(), (averageCalories + dish.getCalories().doubleValue()) / 2);
+            } else {
+                res.put(dish.getType(), dish.getCalories().doubleValue());
+            }
+        }
+
+        System.out.println(res);
+    }
+
+    @Test
+    public void averageCaloriesByGroupsStreamAPI() {
+        Map<DishType, Double> dishesGroupByTypes = restaraunt.getMenu().stream()
+                .collect(Collectors.groupingBy(Dish::getType, Collectors.averagingInt(Dish::getCalories)));
+
+        dishesGroupByTypes.forEach((key, value) -> System.out.println(key + " - " + value));
     }
 }
