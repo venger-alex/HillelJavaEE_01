@@ -4,11 +4,8 @@ import com.google.common.collect.ImmutableList;
 import org.junit.Test;
 
 import java.util.*;
-import java.util.function.Supplier;
 import java.util.stream.Collector;
 import java.util.stream.Collectors;
-
-import static org.junit.Assert.*;
 
 public class RestarauntTest {
     Restaraunt restaraunt = new Restaraunt(ImmutableList.of(
@@ -145,6 +142,10 @@ public class RestarauntTest {
 
     @Test
     public void groupBioDishesNamesByTypeStreamAPI() {
+        /*
+         * Вот честно, нагородил коллектор чисто интуитивно)))
+         * Эту задачу как-то красивее стримами можно решить?
+         */
         Collector<Dish, List<String>, List<String>> collector =
         Collector.of(
                 () -> new ArrayList<String>(),
