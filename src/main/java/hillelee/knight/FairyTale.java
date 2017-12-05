@@ -1,10 +1,10 @@
 package hillelee.knight;
 
         import lombok.Data;
+        import org.springframework.beans.factory.annotation.Qualifier;
         import org.springframework.beans.factory.config.ConfigurableBeanFactory;
         import org.springframework.context.ApplicationContext;
-        import org.springframework.context.annotation.AnnotationConfigApplicationContext;
-        import org.springframework.context.annotation.Scope;
+        import org.springframework.context.annotation.*;
         import org.springframework.stereotype.Component;
 
 public class FairyTale {
@@ -20,14 +20,40 @@ public class FairyTale {
 //        System.out.println(ctx.getBean("myKnight"));
         Knight knight1 = ctx.getBean(Knight.class);
         Knight knight2 = ctx.getBean(Knight.class);
+        System.out.println("Knight: " + knight1);
         System.out.println("Knights are same: " + (knight1 == knight2));
         System.out.println("Quests are same: " + (knight1.getQuest() == knight2.getQuest()));
 
     }
 }
 
+@Configuration
+class Config {
+    @Bean
+    //@Scope(ConfigurableBeanFactory.SCOPE_PROTOTYPE)
+    Knight knight(/*@Qualifier("quest")*/ Quest quest) {
+        return new Knight(quest);
+    }
+
+    @Bean
+    @Primary
+    Quest killDragon() {
+        return new Quest("Kill the Dragon");
+    }
+
+    @Bean
+    Quest rescuePrincess() {
+        return new Quest("Rescue the Princess");
+    }
+
+    @Bean
+    String task() {
+        return "Do nothing";
+    }
+}
+
 @Data
-@Component("myKnight")
+//@Component("myKnight")
 @Scope(ConfigurableBeanFactory.SCOPE_PROTOTYPE)
 class Knight {
     private final Quest quest;
@@ -36,5 +62,5 @@ class Knight {
 @Data
 @Component
 class Quest {
-    private final String task = "Kill the Dragon";
+    private final String task;
 }
