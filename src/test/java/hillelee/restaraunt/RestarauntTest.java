@@ -45,7 +45,8 @@ public class RestarauntTest {
          * и не статик, т.е. метода как бы два, а интерфейс все-равно
          * функциональный. В чем магия?)
          */
-        menu.sort((o1, o2) -> -1 * o1.getCalories().compareTo(o2.getCalories()));
+        //menu.sort((o1, o2) -> -1 * o1.getCalories().compareTo(o2.getCalories()));
+        menu.sort(Comparator.comparing(Dish::getCalories).reversed());
 
         menu = new ArrayList<Dish>(menu.subList(0, 3));
 
@@ -146,16 +147,17 @@ public class RestarauntTest {
          * Вот честно, нагородил коллектор чисто интуитивно)))
          * Эту задачу как-то красивее стримами можно решить?
          */
-        Collector<Dish, List<String>, List<String>> collector =
-        Collector.of(
-                () -> new ArrayList<String>(),
-                (list, dish) -> list.add(dish.getName()),
-                (list1, list2) -> {list1.addAll(list2); return list1;}
-        );
+//        Collector<Dish, List<String>, List<String>> collector =
+//        Collector.of(
+//                () -> new ArrayList<String>(),
+//                (list, dish) -> list.add(dish.getName()),
+//                (list1, list2) -> {list1.addAll(list2); return list1;}
+//        );
 
         Map<DishType, List<String>> collect = restaraunt.getMenu().stream()
                 .filter(Dish::getIsBio)
-                .collect(Collectors.groupingBy(Dish::getType, collector));
+//                .collect(Collectors.groupingBy(Dish::getType, collector));
+                .collect(Collectors.groupingBy(Dish::getType, Collectors.mapping(Dish::getName, Collectors.toList())));
 
         System.out.println(collect);
     }
