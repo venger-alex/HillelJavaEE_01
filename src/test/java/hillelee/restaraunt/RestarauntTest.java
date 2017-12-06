@@ -4,7 +4,6 @@ import com.google.common.collect.ImmutableList;
 import org.junit.Test;
 
 import java.util.*;
-import java.util.stream.Collector;
 import java.util.stream.Collectors;
 
 public class RestarauntTest {
@@ -39,13 +38,6 @@ public class RestarauntTest {
     public void printTop3HighCaloriesDishesOldSchool() {
         List<Dish> menu = new ArrayList<Dish>(restaraunt.getMenu());
 
-        /*
-         * Заглянул в исходники Comparator'а - функциональный интерфейс,
-         * но помимо метода compare, объявлен еще equals, не как дефолтный,
-         * и не статик, т.е. метода как бы два, а интерфейс все-равно
-         * функциональный. В чем магия?)
-         */
-        //menu.sort((o1, o2) -> -1 * o1.getCalories().compareTo(o2.getCalories()));
         menu.sort(Comparator.comparing(Dish::getCalories).reversed());
 
         menu = new ArrayList<Dish>(menu.subList(0, 3));
@@ -58,14 +50,7 @@ public class RestarauntTest {
     @Test
     public void printTop3HighCaloriesDishesStreamAPI() {
         restaraunt.getMenu().stream()
-                .sorted((o1, o2) -> -1 * o1.getCalories().compareTo(o2.getCalories()))
-                /*
-                 * Вот тут limit судя по всему после сортировки произошел,
-                 * видимо потому, что он после сортировки и указан
-                 * А при фильтрации и вообще limit в каком порядке выполняется,
-                 * элементы то по одному через pipe идут? Почему сортировка тогда целиком
-                 * прошла в данном случае? А при фильтрации (filter)?
-                 */
+                .sorted(Comparator.comparing(Dish::getCalories).reversed())
                 .limit(3)
                 .map(Dish::getName)
                 .forEach(System.out::println);
@@ -143,21 +128,10 @@ public class RestarauntTest {
 
     @Test
     public void groupBioDishesNamesByTypeStreamAPI() {
-        /*
-         * Вот честно, нагородил коллектор чисто интуитивно)))
-         * Эту задачу как-то красивее стримами можно решить?
-         */
-//        Collector<Dish, List<String>, List<String>> collector =
-//        Collector.of(
-//                () -> new ArrayList<String>(),
-//                (list, dish) -> list.add(dish.getName()),
-//                (list1, list2) -> {list1.addAll(list2); return list1;}
-//        );
-
         Map<DishType, List<String>> collect = restaraunt.getMenu().stream()
                 .filter(Dish::getIsBio)
-//                .collect(Collectors.groupingBy(Dish::getType, collector));
-                .collect(Collectors.groupingBy(Dish::getType, Collectors.mapping(Dish::getName, Collectors.toList())));
+                .collect(Collectors.groupingBy(Dish::getType,
+                                                Collectors.mapping(Dish::getName, Collectors.toList())));
 
         System.out.println(collect);
     }

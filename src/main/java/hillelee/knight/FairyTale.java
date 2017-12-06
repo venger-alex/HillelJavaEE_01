@@ -1,11 +1,11 @@
 package hillelee.knight;
 
-        import lombok.Data;
-        import org.springframework.beans.factory.annotation.Qualifier;
-        import org.springframework.beans.factory.config.ConfigurableBeanFactory;
-        import org.springframework.context.ApplicationContext;
-        import org.springframework.context.annotation.*;
-        import org.springframework.stereotype.Component;
+import lombok.Data;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.beans.factory.config.ConfigurableBeanFactory;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.annotation.*;
+import org.springframework.stereotype.Component;
 
 public class FairyTale {
     public static void main(String[] args) {
